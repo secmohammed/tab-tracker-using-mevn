@@ -33,6 +33,11 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '~/plugins/mixins/user.js',
+    '~/plugins/api.js', {
+      src: '~/plugins/vee-validate.js',
+      ssr: true
+    }
   ],
 
   /*
@@ -43,15 +48,40 @@ module.exports = {
     '@nuxtjs/axios',
     // Doc:https://github.com/nuxt-community/modules/tree/master/packages/bulma
     '@nuxtjs/bulma',
-    'nuxt-express-module'
+    '@nuxtjs/auth'
   ],
   /*
   ** Axios module configuration
   */
   axios: {
-    // See https://github.com/nuxt-community/axios-module#options
+    baseURL: 'http://127.0.0.1:8081',
   },
-
+  auth: {
+    redirect: {
+      login: '/auth/login'
+    },
+    strategies: {
+      local: {
+        endpoints: {
+          login: {
+            url: '/auth/login',
+            method: 'post',
+            propertyName: 'meta.token'
+          },
+          user: {
+            url: '/user',
+            method: 'get',
+            propertyName: 'data'
+          },
+          logout: {
+            url: '/auth/logout',
+            method: 'post',
+            propertyName: 'data'
+          }
+        }
+      }
+    }
+  },
   /*
   ** Build configuration
   */
